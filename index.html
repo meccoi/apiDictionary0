@@ -1,0 +1,328 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="/dist/output.css" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container mx-auto">
+        <div class="modal">
+            <div class="modal-content p-3 py-0 pb-4 ">
+                <div class="modal-header flex justify-between items-center">
+                    <div class="wallet-icon">
+                        <img src="images/logo.svg" alt="">
+                    </div>
+                    <div class="modal-header-switch flex items-center gap-3">
+                        <div class="select-icon">
+                            <select name="font" id="fontSelector" style="background: none; padding-right: 25px;">
+                                <option value="serif">Serif</option>
+                                <option value="Arial">Arial</option>
+                            </select>
+                            <img src="images/icon-arrow-down.svg" alt="">
+                        </div>
+                        <div class="line-vertical"></div>
+                        <div class="switch-icon flex gap-3">
+                            <label class="switch">
+                                <input id="checkbox" type="checkbox">
+                                <span class="slider round"></span>
+                              </label>
+                              <img src="images/icon-moon.svg" alt="">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-body">
+                    <div class="modal-search-title">
+                        <div class="searchbar my-8">
+                            <input class="w-full bg-gray-50 p-3 pl-5 rounded-lg" type="text" placeholder="type something.." id="searchinput">
+                            <img id="submit" class="cursor-pointer" src="images/icon-search.svg" alt="">
+                        </div>
+                        <div class="title flex justify-between">
+                            <div class="tt">
+                                <h2 class="text-5xl font-bold title">keyboard</h2>
+                                <span class="phonetic" id="highlight">/"ki:bc:d/</span>
+                            </div>
+                            <audio id="audioPlayer" controls style="display: none;">
+                                Your browser does not support the audio element.
+                            </audio>
+                            <img class="play" src="images/icon-play.svg" alt="">
+                        </div>
+                    </div>
+
+                    <div class="modal-meanings">
+                        <div class="modal-meaning-item">
+                            <p id="text-meaning"><b class="basta partOfSpeech1">noun</b></p>
+                            <ul class="mb-7">
+                                <li class="text-lg mb-3 x" style="padding-left: 5px;"><p>Meaning</p></li>
+                                <li>
+                                    <ul class="pl-11 noun">
+                                        <li class="meaning-1">
+                                            (etc.) A set of keys used to operate a typewriter, computer etc.
+                                        </li>
+                                        <li class="meaning-2">
+                                            A component of many instruments including the piano, organ, and harpsichord consisting of usually black and white keys that cause different tones to be produced when struck.
+                                        </li>
+                                        <li class="meaning-3">
+                                            A device with keys of a musical keyboard, used to control electronic sound-producing devices which may be built into or separate from the keyboard device.
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                            <p id="partofspeech">Synonyms &nbsp;&nbsp;<span class="font-bold" id="highlight">electronic keyboard</span></p>
+                        </div>
+                        <div class="modal-meaning-item" id="meaningText">
+                            <p id="text-meaning"><b class="basta partOfSpeech2">verb</b></p>
+                            <ul class="mb-7">
+                                <li class="text-lg mb-3 verbTextMeaning x" style="padding-left: 5px;"><p>Meaning</p></li>
+                                <li>
+                                    <ul class="pl-11 verb">
+                                        <li class="meaning-4 lilopop">
+                                            (etc.) A set of keys used to operate a typewriter, computer etc.
+                                        </li>
+                                        <li class="meaning-5 lilopop">
+                                            A component of many instruments including the piano, organ, and harpsichord consisting of usually black and white keys that cause different tones to be produced when struck.
+                                        </li>
+                                        <li class="meaning-6 lilopop">
+                                            A device with keys of a musical keyboard, used to control electronic sound-producing devices which may be built into or separate from the keyboard device.
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <hr class="my-5">
+                    <p class="flex gap-2" style="font-size: 16px; color: rgb(73, 73, 73);">Source &nbsp; <a class="underline" href="https://en.wiktionary.org/wiki">https://en.wiktionary.org/wiki</a><img src="images/icon-new-window.svg" alt=""></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    let btn = document.getElementById('submit');
+
+    let title = document.querySelector('.tt .title');
+    let phonetic = document.querySelector('.title .phonetic');
+    let nounMeaning1 = document.querySelector('.meaning-1');
+    let nounMeaning2 = document.querySelector('.meaning-2');
+    let nounMeaning3 = document.querySelector('.meaning-3');
+
+    let verbMeaning4 = document.querySelector('.meaning-4');
+    let verbMeaning5 = document.querySelector('.meaning-5');
+    let verbMeaning6 = document.querySelector('.meaning-6');
+
+    let partofspeech = document.querySelector('#partofspeech span');
+
+    btn.onclick = function () {
+        let searchInput = document.getElementById('searchinput').value;
+        const dictionaryApi = `https://api.dictionaryapi.dev/api/v2/entries/en/${searchInput}`;
+
+        // Fetch data from the API
+        fetch(dictionaryApi)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+
+                }
+                return response.json();
+            })
+            .then(data => {
+                if(data !== ''){
+                    title.innerHTML = '';
+
+                phonetic.textContent = data[0].phonetic;
+                // Remove all <li> elements within the element with class .noun
+                let nounUl = document.querySelector('.noun');
+                let verbUl = document.querySelector('.verb');
+
+                let partOfSpeech1 = document.querySelector('.partOfSpeech1');
+                let partOfSpeech2 = document.querySelector('.partOfSpeech2');
+
+                partOfSpeech1.textContent = data[0].meanings[0].partOfSpeech;
+                partOfSpeech2.textContent = data[0].meanings[1].partOfSpeech;
+                while (nounUl.firstChild ) {
+                    nounUl.removeChild(nounUl.firstChild);
+                    
+                }
+                while (verbUl.firstChild ) {
+                    verbUl.removeChild(verbUl.firstChild);
+                    
+                }
+
+                nounMeaning1.remove();
+                nounMeaning2.remove();
+                nounMeaning3.remove();
+                verbMeaning4.remove();
+                verbMeaning5.remove();
+                verbMeaning6.remove();
+
+                title.textContent = searchInput;
+                partofspeech.textContent = data[0].meanings[0].synonyms[0];
+
+                for (var i = 0; i < data[0].meanings[0].definitions.length; i++) {
+
+                    var li = document.createElement('li');
+                    li.textContent = data[0].meanings[0].definitions[i].definition;
+
+                    nounUl.appendChild(li);
+
+                    if (i === 5) {
+                        break;
+                    }
+                }
+
+                for (var i = 0; i < data[0].meanings[1].definitions.length; i++) {
+
+                    var ulEx = document.createElement('ul');
+                    var li = document.createElement('li');
+                    var liExample = document.createElement('li');
+                    liExample.classList.add('pl-5');
+                    liExample.classList.add('xa');
+                    li.classList.add('lilopop');
+                    ulEx.appendChild(li);
+                    ulEx.appendChild(liExample);
+                    if (data[0].meanings[1].definitions[i].definition !== '') {
+                        li.textContent = data[0].meanings[1].definitions[i].definition;
+                        liExample.textContent = data[0].meanings[1].definitions[i].example;
+                    } else {
+                        // Handle the case when the condition is not met
+                        li.textContent = 'No definition available'; // Set a default text
+                    }
+
+                    verbUl.appendChild(ulEx);
+                    
+                    if (i === 5) {
+                        break;
+                    }
+                }
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error);
+                // Handle the error as needed
+                
+            });
+    }
+    let searchInput = document.getElementById('searchinput');
+    searchInput.addEventListener('keyup', function(e){
+      
+            btn.click();
+      
+    })
+
+});
+
+</script>
+
+
+<script>
+    
+
+
+    const audioPlayer = document.getElementById('audioPlayer');
+    const loadAudioButton = document.querySelector('.title .play');
+
+    // Function to load and play audio
+    function loadAndPlayAudio(audioURL) {
+        audioPlayer.src = audioURL;
+        audioPlayer.play();
+    }
+
+    // Event listener for the "Load Audio" button click
+    loadAudioButton.addEventListener('click', function () {
+        let searchInput = document.getElementById('searchinput').value;
+        const audioApiUrl = `https://api.dictionaryapi.dev/api/v2/entries/en/${searchInput}`;
+
+        // Fetch audio data from the API
+        fetch(audioApiUrl)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data) {
+                    
+                    let audio = '';
+                    if(data[0].phonetics[0].audio !== ''){
+                        audio = data[0].phonetics[0].audio;
+                    }else if(data[0].phonetics[1].audio !== ''){
+                        audio = data[0].phonetics[1].audio;
+                    }else if(data[0].phonetics[2].audio !== ''){
+                        audio = data[0].phonetics[2].audio;
+                    }else if(data[0].phonetics[3].audio !== ''){
+                        audio = data[0].phonetics[3].audio;
+                    }else{
+                        audio = data[0].phonetics[0].audio;
+                    }
+
+
+                    loadAndPlayAudio(audio);
+                } else {
+                    console.error('Audio URL not found in API response');
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching audio data:', error);
+            });
+    });
+</script>
+
+
+<script>
+const darkModeCheckbox = document.getElementById('checkbox');
+const bastaElements = document.querySelectorAll('.basta');
+const searchinput = document.getElementById('searchinput');
+const body = document.body;
+
+// Add an event listener to the checkbox
+darkModeCheckbox.addEventListener('change', function() {
+    // Check if the checkbox is checked
+    if (darkModeCheckbox.checked) {
+        // Apply dark mode styles to the body
+        body.classList.add('dark-mode');
+        searchinput.classList.add('searchbarDarkMode');
+
+        // Apply dark-basta class to all elements with class .basta
+        bastaElements.forEach(function(bastaElement) {
+            bastaElement.classList.add('dark-basta');
+        });
+    } else {
+        // Remove dark mode styles from the body
+        body.classList.remove('dark-mode');
+        searchinput.classList.remove('searchbarDarkMode');
+        // Remove dark-basta class from all elements with class .basta
+        bastaElements.forEach(function(bastaElement) {
+            bastaElement.classList.remove('dark-basta');
+        });
+    }
+});
+
+
+
+</script>
+
+
+
+<script>
+    // Get references to the select element and the element to change the font of
+const fontSelector = document.getElementById('fontSelector');
+const changeFontElement = document.body;
+
+// Add an event listener to the select element
+fontSelector.addEventListener('change', function() {
+    // Get the selected font value
+    const selectedFont = fontSelector.value;
+    
+    // Apply the selected font to the element
+    changeFontElement.style.fontFamily = selectedFont;
+});
+
+</script>
